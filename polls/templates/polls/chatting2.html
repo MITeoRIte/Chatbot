@@ -12,7 +12,7 @@
 	}
 
 	body {
-		{% comment %} background: #084247; {% endcomment %}
+		background: #084247;
 	}
 
 	.chatbox {
@@ -116,6 +116,61 @@
 	.chat-form button:hover {
 		background: #13c8d9;
 	}
+			body {
+		font: 15px arial, sans-serif;
+		background-color: #d9d9d9;
+		padding-top: 15px;
+		padding-bottom: 15px;
+		}
+
+		#bodybox {
+		margin: auto;
+		max-width: 550px;
+		font: 15px arial, sans-serif;
+		background-color: white;
+		border-style: solid;
+		border-width: 1px;
+		padding-top: 20px;
+		padding-bottom: 25px;
+		padding-right: 25px;
+		padding-left: 25px;
+		box-shadow: 5px 5px 5px grey;
+		border-radius: 15px;
+		}
+
+		#chatborder {
+		border-style: solid;
+		background-color: #f6f9f6;
+		border-width: 3px;
+		margin-top: 20px;
+		margin-bottom: 20px;
+		margin-left: 20px;
+		margin-right: 20px;
+		padding-top: 10px;
+		padding-bottom: 15px;
+		padding-right: 20px;
+		padding-left: 15px;
+		border-radius: 15px;
+		}
+
+		.chatlog {
+		font: 15px arial, sans-serif;
+		}
+
+		#chatbox {
+		font: 17px arial, sans-serif;
+		height: 22px;
+		width: 100%;
+		}
+
+		h1 {
+		margin: auto;
+		}
+
+		pre {
+		background-color: #f0f0f0;
+		margin-left: 20px;
+		}
 
 
 	</style>
@@ -125,56 +180,77 @@
 
 	<div class="chatbox">
 		<div class="chatlogs">
-			<div class="chat friend">
-				<div class="user-photo"></div>
-				<p class="chat-message">What's up, dong</p>	
-			</div>
-			<div class="chat friend">
-				<div class="user-photo"></div>
-				<p class="chat-message">What's up bong!</p>	
-			</div>
-			<div class="chat self">
-				<div class="user-photo"></div>
-				<p class="chat-message">Hello</p>	
-			</div>
-			<div class="chat self">
-				<div class="user-photo"></div>
-				<p class="chat-message">Potato</p>
-			</div>
-			<div class="chat friend">
-				<div class="user-photo"></div>
-				<p class="chat-message">hi</p>	
-			</div>
-
-			
-
-
-
+			<p id="chatlog7" class="chatlog">&nbsp;</p>
+    		<p id="chatlog6" class="chatlog">&nbsp;</p>
+			<p id="chatlog5" class="chatlog">&nbsp;</p>
+			<p id="chatlog4" class="chatlog">&nbsp;</p>
+			<p id="chatlog3" class="chatlog">&nbsp;</p>
+			<p id="chatlog2" class="chatlog">&nbsp;</p>
+			<p id="chatlog1" class="chatlog">&nbsp;</p>
 		</div>
 		<div class="chat-form">
 			<textarea id="textdifang"></textarea>
 			<button id="clickme">Send</button>
-			<p></p>
 		</div>
 
 		<script>
+		var messages = [],
+		lastUserMessage = "", //keeps track of the most recent input string from the user
+		botMessage = "", //var keeps track of what the chatbot is going to say
+		botName = 'Chatbot',
+		talking = true; //name of the chatbot
+
 		$(document).ready(function() {
 			$.ajaxSetup({
         		headers: { "X-CSRFToken": '{{ csrf_token }}' }
    			});
 			$("#clickme").click(function() {
-				$.ajax({
-                type: 'POST',
-                url: 'send/',
-				data: {'message': textdifang.value},
-                success: function(data) {
-					alert(data);
-                    $("p").text(data);
-                }
-            });
+				if (textdifang.value != "") { //if text box isn't blank (FIX THIS SYNTAX)
+					lastUserMessage = textdifang.value; //stores what the user types
+					textdifang.value = ""; //Resets the textbox
+					messages.push(lastUserMessage); //adds the value of the chatbox to the array messages
+					$.ajax({ //Uses AJAX to send message to chatbot
+                		type: 'POST',
+                		url: 'send/',
+						data: {'message': lastUserMessage}, //sends message to chatbot
+                		success: function(data) { //once reply is received,
+							botMessage = data; //stores reply in botMessge
+                		}
+            		});
+					messages.push("<b>" + botName + ":</b> " + botMessage); //add bot's message to var messages
+					for (var i = 1; i < 8; i++) {
+						if (messages[messages.length - i])
+							document.getElementById("chatlog" + i).innerHTML = messages[messages.length - i];
+					}
+					Speech(botMessage); //reads message
+				}
+
+				
 			});
 		});
+
+
+
+
+
+
+		function Speech(say) {
+			if ('speechSynthesis' in window && talking) {
+				var utterance = new SpeechSynthesisUtterance(say);
+				msg.voice = voices[10]; // Note: some voices don't support altering params
+				msg.voiceURI = 'native';
+				utterance.volume = 1; // 0 to 1
+				utterance.rate = 0.1; // 0.1 to 10
+				utterance.pitch = 1; //0 to 2
+				//utterance.text = 'Hello World';
+				utterance.lang = 'en-US';
+				speechSynthesis.speak(utterance);
+			}
+		}
+	
 		</script>
+
+	
 
 </body>
 </html>
