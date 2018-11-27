@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Chat theme example</title>
+
+	<style>
+		{
+		margin: 0;
+		padding: 0;
+		font-family: tahoma, Helvetica;
+		box-sizing: border-box;
+	}
+
+	body {
+		background: #084247;
+	}
+
+	.chatbox {
+		width: 500px;
+		min-width: 390px;
+		height: 600px;
+		background: #fff;
+		padding: 10px;
+		margin: 0px 50px 900px 900px;
+		box-shadow: 0 3px #ccc;
+	}
+
+	.chatlogs {
+		padding: 10px;
+		width: 100%;
+		height: 450px;
+		overflow-x: hidden;
+		overflow-y: scroll;
+	}
+
+	.chatlogs::-webkit-scrollbar {
+		width: 30px;
+	}
+
+	.chatlogs::-webkit-scrollbar-thumb {
+		border-radius: 5px;
+		background: rgba(0,0,0,.1);
+	}
+
+	.chat {
+		display: flex;
+		flex-flow: row wrap;
+		align-items: flex-start;
+		margin-bottom: 10px;
+	}
+
+
+	.chat .user-photo {
+		width: 60px;
+		height: 60px;
+		background: #ccc;
+		border-radius: 50%;
+	}
+
+	.chat .chat-message {
+		width: 80%;
+		padding: 15px;
+		margin: 5px 10px 0;
+		border-radius: 10px;
+		color: #fff;
+		font-size: 20px;
+	}
+
+	.friend .chat-message {
+		background: #1adda4;
+	}
+
+	.self .chat-message {
+		background: #1ddced;
+		order: -1;
+	}
+
+	.chat-form {
+		margin-top: 20px;
+		display: flex;
+		align-items: flex-start;
+	}
+
+	.chat-form textarea {
+		background: #fbfbfb;
+		width: 75%;
+		height: 50px;
+		border: 2px solid #eee;
+		border-radius: 3px;
+		resize: none;
+		padding: 10px;
+		font-size: 18px;
+		color: #333;
+	}
+
+	.chat-form textarea:focus {
+		background: #fff;
+	}
+
+	.chat-form button {
+		background: #1ddced;
+		padding: 5px 15px;
+		font-size: 30px;
+		color: #fff;
+		border: none;
+		margin: 0 10px;
+		border-radius: 3px;
+		box-shadow: 0 3px 0 #0eb2c1;
+		cursor: pointer;
+
+		-webkit-transaction: background .2s ease;
+		-moz-transaction: backgroud .2s ease;
+		-o-transaction: backgroud .2s ease;
+	}
+
+	.chat-form button:hover {
+		background: #13c8d9;
+	}
+
+
+	</style>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+
+	<div class="chatbox">
+		<div class="chatlogs">
+			<div class="chat friend">
+				<div class="user-photo"></div>
+				<p class="chat-message">What's up, dong</p>	
+			</div>
+			<div class="chat friend">
+				<div class="user-photo"></div>
+				<p class="chat-message">What's up bong!</p>	
+			</div>
+			<div class="chat self">
+				<div class="user-photo"></div>
+				<p class="chat-message">Hello</p>	
+			</div>
+			<div class="chat self">
+				<div class="user-photo"></div>
+				<p class="chat-message">Potato</p>
+			</div>
+			<div class="chat friend">
+				<div class="user-photo"></div>
+				<p class="chat-message">hi</p>	
+			</div>
+
+			
+
+
+
+		</div>
+		<div class="chat-form">
+			<textarea id="textdifang"></textarea>
+			<button id="clickme">Send</button>
+			<p></p>
+		</div>
+
+		<script>
+		$(document).ready(function() {
+			$.ajaxSetup({
+        		headers: { "X-CSRFToken": '{{ csrf_token }}' }
+   			});
+			$("#clickme").click(function() {
+				$.ajax({
+                type: 'POST',
+                url: 'send/',
+				data: {'message': textdifang.value},
+                success: function(data) {
+					alert(data);
+                    $("p").text(data);
+                }
+            });
+			});
+		});
+		</script>
+
+</body>
+</html>
+
