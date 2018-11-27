@@ -84,7 +84,7 @@ bot = ChatBot('Test')
 
 # bot.set_trainer(ListTrainer)
 
-# for f in os.listdir('/home/Desktop/GovTech Projects/CHATBOT FOR WEBPAGE/files'):
+# for f in os.listdir('/home/Desktop/GovTech Projects/CHATBOT FOR WEBPAGE/Chatbot/files'):
 #     print(f)
 #     # toprocess = open('files/' + f).readlines()
 #     # bot.train(toprocess)
