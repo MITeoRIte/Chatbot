@@ -10,6 +10,6 @@ urlpatterns = [
     path('send/', views.send_message),
     path('sendtochatterbot/',views.send_replyfromChatterbot),
     path('chatting3', views.chatting3, name='Chatting3'),
-    path('script.php', views.script, name='Script')
+    path('thinkinggif',views.thinkinggif)
     # path('base', views.base, name ='base')
 ]

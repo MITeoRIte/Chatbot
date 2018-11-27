@@ -2,6 +2,7 @@ from django.shortcuts import render
 # Create your views here.
 from django.http import HttpResponse
 import datetime 
+import os
 
 posts = [
     {
@@ -41,10 +42,6 @@ def chatting3(request):
     return render(request, 'polls/chatting3.html', {'title' : 'Chatting 3!'})
 
 
-def script(request):
-    return render(request, 'polls/script.php', {'title': 'Script!'})
-
-
 name = "Echobot 1"
 weather = "Cloudy"
 
@@ -76,23 +73,23 @@ def send_message(request):
     return HttpResponse(reply) 
 
 
-# from chatterbot.trainers import ListTrainer
+from chatterbot.trainers import ListTrainer
 from chatterbot import ChatBot
-# import os
+
 
 bot = ChatBot('Test')
+bot.set_trainer(ListTrainer)
 
-# bot.set_trainer(ListTrainer)
-
-# for f in os.listdir('/home/Desktop/GovTech Projects/CHATBOT FOR WEBPAGE/Chatbot/files'):
-#     print(f)
-#     # toprocess = open('files/' + f).readlines()
-#     # bot.train(toprocess)
+for f in os.listdir('/Users/yuxin/Desktop/chatterbotfiles'):
+    toprocess = open('/Users/yuxin/Desktop/chatterbotfiles/' + f).readlines()
+    bot.train(toprocess)
 
 def send_replyfromChatterbot(request):
     xinxi = request.POST['message']
     reply = bot.get_response(xinxi)
     return HttpResponse(reply)
+def thinkinggif(request):
+    return render(request, 'polls/images/thinking.gif', {'title' : 'gif!'})
 
     
 

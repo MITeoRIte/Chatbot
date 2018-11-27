@@ -119,7 +119,7 @@
 			body {
 		font: 15px arial, sans-serif;
 		background-color: #d9d9d9;
-		padding-top: 15px;
+		padding-top: 0px;
 		padding-bottom: 15px;
 		}
 
@@ -130,7 +130,7 @@
 		background-color: white;
 		border-style: solid;
 		border-width: 1px;
-		padding-top: 20px;
+		padding-top: 0px;
 		padding-bottom: 25px;
 		padding-right: 25px;
 		padding-left: 25px;
@@ -180,6 +180,11 @@
 
 	<div class="chatbox">
 		<div class="chatlogs">
+			<p id="chatlog12" class="chatlog">&nbsp;</p>
+			<p id="chatlog11" class="chatlog">&nbsp;</p>
+			<p id="chatlog10" class="chatlog">&nbsp;</p>
+			<p id="chatlog9" class="chatlog">&nbsp;</p>
+			<p id="chatlog8" class="chatlog">&nbsp;</p>
 			<p id="chatlog7" class="chatlog">&nbsp;</p>
     		<p id="chatlog6" class="chatlog">&nbsp;</p>
 			<p id="chatlog5" class="chatlog">&nbsp;</p>
@@ -187,9 +192,11 @@
 			<p id="chatlog3" class="chatlog">&nbsp;</p>
 			<p id="chatlog2" class="chatlog">&nbsp;</p>
 			<p id="chatlog1" class="chatlog">&nbsp;</p>
+			<p id="thinking"></p>
 		</div>
 		<div class="chat-form">
-			<textarea id="textdifang"></textarea>
+			
+			<textarea id="textdifang" placeholder="Say something to MengWAH"></textarea>
 			<button id="clickme">Send</button>
 		</div>
 
@@ -197,7 +204,7 @@
 		var messages = [],
 		lastUserMessage = "", //keeps track of the most recent input string from the user
 		botMessage = "", //var keeps track of what the chatbot is going to say
-		botName = 'Chatbot',
+		botName = 'MengWAH',
 		talking = true; //name of the chatbot
 
 		$(document).ready(function() {
@@ -208,28 +215,40 @@
 				if (textdifang.value != "") { //if text box isn't blank (FIX THIS SYNTAX)
 					lastUserMessage = textdifang.value; //stores what the user types
 					textdifang.value = ""; //Resets the textbox
-					messages.push(lastUserMessage); //adds the value of the chatbox to the array messages
+					messages.push("<p>You: " + lastUserMessage + "</p>"); //adds the value of the chatbox to the array messages
 					$.ajax({ //Uses AJAX to send message to chatbot
                 		type: 'POST',
-                		url: 'send/',
+                		url: 'sendtochatterbot/',
 						data: {'message': lastUserMessage}, //sends message to chatbot
                 		success: function(data) { //once reply is received,
 							botMessage = data; //stores reply in botMessge
                 		}
             		});
-					messages.push("<b>" + botName + ":</b> " + botMessage); //add bot's message to var messages
-					for (var i = 1; i < 8; i++) {
-						if (messages[messages.length - i])
-							document.getElementById("chatlog" + i).innerHTML = messages[messages.length - i];
-					}
-					Speech(botMessage); //reads message
+					document.getElementById("thinking").innerHTML = "Thinking...";
+					setTimeout(function(){
+						document.getElementById("thinking").innerHTML = "";
+						messages.push("<b>" + botName + ":</b> " + botMessage); //add bot's message to var messages
+						for (var i = 1; i < 8; i++) {
+							if (messages[messages.length - i]){
+								document.getElementById("chatlog" + i).innerHTML = messages[messages.length - i];
+							}}
+						Speech(botMessage); //reads message
+					},1000);
+					
+					
 				}
-
-				
 			});
 		});
 
-
+		function show_image(src, width, height, alt) {
+			var img = document.createElement("img");
+			img.src = src;
+			img.width = width;
+			img.height = height;
+			img.alt = alt;
+			// This next line will just add it to the <body> tag
+			document.body.appendChild(img);
+		}
 
 
 
@@ -237,17 +256,16 @@
 		function Speech(say) {
 			if ('speechSynthesis' in window && talking) {
 				var utterance = new SpeechSynthesisUtterance(say);
-				msg.voice = voices[10]; // Note: some voices don't support altering params
-				msg.voiceURI = 'native';
+				//msg.voice = voices[10]; // Note: some voices don't support altering params
+				//msg.voiceURI = 'native';
 				utterance.volume = 1; // 0 to 1
-				utterance.rate = 0.1; // 0.1 to 10
-				utterance.pitch = 1; //0 to 2
+				utterance.rate = 0.5; // 0.1 to 10
+				utterance.pitch = 2; //0 to 2
 				//utterance.text = 'Hello World';
 				utterance.lang = 'en-US';
 				speechSynthesis.speak(utterance);
 			}
 		}
-	
 		</script>
 
 	
